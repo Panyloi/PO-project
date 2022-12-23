@@ -7,64 +7,93 @@ public class Animal implements IMapElement{
     public int energy;
     public MapDirection direction;
     public int startEnergy;
-    public ArrayList<IPositionChangeObserver> observerList = new ArrayList<>();
+    public ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
     public Genes genes;
+    public int lengthOfGenes;
     public Vector2d position;
+    public int age;
+    public int children;
 
-    // Constructor
-    public Animal(){
+    public Animal(int size){
         this.direction = MapDirection.NORTH;
-        this.genes = new Genes();
+        this.lengthOfGenes = size;
+        this.genes = new Genes(size);
         this.position = new Vector2d(1, 1);
+        this.age = 0;
+        this.children = 0;
     }
 
-    public Animal(IWorldMap map){
-        this();
+    public Animal(int size, IWorldMap map){
+        this(size);
         this.map = map;
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition){
-        this(map);
+    public Animal(int size, IWorldMap map, Vector2d initialPosition){
+        this(size, map);
         this.position = initialPosition;
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition, int energy){
-        this(map, initialPosition);
+    public Animal(int size, IWorldMap map, Vector2d initialPosition, int energy){
+        this(size, map, initialPosition);
         this.energy = energy;
     }
 
-    
-
+    public boolean isAlive(){ // return true if this animal is still alive
+        return energy >= 0;
+    }
 
     @Override
     public Vector2d getPosition() {
-        return null;
+        return this.position;
     }
 
-    public void addObserver(WorldMap WorldMap) {
-
+    public void addObserver(IPositionChangeObserver observer) {
+        observers.add(observer);
     }
 
     public int getEnergy() {
-        return 0;
+        return energy;
     }
 
     public void turnBack() {
+        switch (this.direction){
+            case NORTH -> this.direction = MapDirection.SOUTH;
+            case NORTHEAST -> this.direction = MapDirection.SOUTHWEST;
+            case NORTHWEST -> this.direction = MapDirection.SOUTHEAST;
+            case SOUTH -> this.direction = MapDirection.NORTH;
+            case SOUTHEAST -> this.direction = MapDirection.NORTHWEST;
+            case SOUTHWEST -> this.direction = MapDirection.NORTHEAST;
+        }
     }
 
     public void changeEnergy(int i) {
+        this.energy = this.energy + i;
     }
 
     public int getAge() {
-        return 0;
+        return age;
     }
 
     public int getChildren() {
-        return 0;
+        return children;
     }
 
     public void move() {
+        int gene = genes.nextGene();
+        MapDirection geneDirection = direction.rotate(gene);
+
+        Vector2d toMove = position.add(geneDirection.toUnitVector());
+
+        if (map.canMoveTo(toMove)){
+            Vector2d positionToDelete = new Vector2d(position.x, position.y);
+            this.position = this.position.add(geneDirection.toUnitVector());
+            this.positionChanged(this, positionToDelete, this.position);
+        }
     }
 
-
+    public void positionChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition){
+        for (IPositionChangeObserver observer : observers){
+            observer.positionChanged(animal, oldPosition, newPosition);
+        }
+    }
 }
