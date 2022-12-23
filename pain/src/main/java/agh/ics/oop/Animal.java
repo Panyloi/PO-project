@@ -6,6 +6,7 @@ public class Animal {
     }
 
     public void addObserver(WorldMap WorldMap) {
+
     }
 
     public int getEnergy() {
