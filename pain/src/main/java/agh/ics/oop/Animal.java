@@ -1,6 +1,10 @@
 package agh.ics.oop;
 
 public class Animal {
+
+    public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
+    }
+
     public Vector2d getPosition() {
         return null;
     }
@@ -27,5 +31,8 @@ public class Animal {
     }
 
     public void move() {
+    }
+
+    public void changePosition(Vector2d newPosition) {
     }
 }
