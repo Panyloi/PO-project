@@ -2,103 +2,147 @@ package agh.ics.oop;
 
 import java.util.*;
 
-public class WorldMap implements IWorldMap, IPositionChangeObserver{
+public class WorldMap implements IPositionChangeObserver{
     private final int width;
     private final int height;
     private final int mapVariant;
-    private final int startGrass;
     private final int grassProfit;
-    private final int dailyGrass;
     private final int requiredEnergy;
     private final int reproductionCost;
     private final int minMutation;
     private final int maxMutation;
     private final int mutationVariant;
-    private final int genomLength;
     private final Vector2d lowerLeft = new Vector2d(0, 0);
     private final Vector2d upperRight;
-    private final AnimalComparator comparator = new AnimalComparator();
+    private final AnimalComparator animalComparator = new AnimalComparator();
     private final Map<Vector2d, TreeSet<Animal>> animalsMap = new HashMap<>();
     private final LinkedList<Animal> animals = new LinkedList<>();
     private final LinkedList<Grass> grasses = new LinkedList<>();
-    private final TreeSet<Vector2d> deathMap = new TreeSet<>();
+    private final ToxicityComparator toxicityComparator = new ToxicityComparator();
+    public static int[][] deathMap;
+    private final TreeSet<Vector2d> uncoveredJungle  = new TreeSet<>(toxicityComparator);
+    private final TreeSet<Vector2d> uncoveredSteppes  = new TreeSet<>(toxicityComparator);
+    private Vector2d jungleLowerLeft;
+    private Vector2d jungleUpperRight;
 
-
-    public WorldMap(int width, int height, int mapVariant, int startGrass, int grassProfit, int dailyGrass, int requiredEnergy, int reproductionCost, int minMutation, int maxMutation, int mutationVariant, int genomLength){
+    public WorldMap(int width, int height, int mapVariant, int grassProfit, int requiredEnergy, int reproductionCost, int minMutation, int maxMutation, int mutationVariant){
         this.width = width;
         this.height = height;
         this.mapVariant =  mapVariant;
-        this.startGrass = startGrass;
         this.grassProfit =  grassProfit;
-        this.dailyGrass = dailyGrass;
         this.requiredEnergy = requiredEnergy;
         this.reproductionCost = reproductionCost;
         this.minMutation = minMutation;
         this.maxMutation = maxMutation;
         this.mutationVariant = mutationVariant;
-        this.genomLength = genomLength;
         this.upperRight = new Vector2d(width - 1, height - 1);
+        deathMap = new int[width][height];
+        initJungleAndSteps();
     }
 
-    @Override
+    private boolean belongsToJungle(Vector2d position){
+        return position.follows(jungleLowerLeft) && position.precedes(jungleUpperRight);
+    }
+
+    private void initJungleAndSteps() {
+        jungleLowerLeft = new Vector2d(width /4, height /4);
+        jungleUpperRight = upperRight.subtract(jungleLowerLeft);
+        for (int x=0; x<width; x++) for (int y=0; y<height; y++) {
+            Vector2d position = new Vector2d(x, y);
+            if (belongsToJungle(position)) uncoveredJungle.add(position);
+            else uncoveredSteppes.add(position);
+        }
+    }
+
+
     public boolean canMoveTo(Vector2d position) {
         return position.follows(this.lowerLeft) && position.precedes(this.upperRight);
     }
 
-    @Override
-    public boolean place(Animal animal) {
+    public void place(Animal animal) {
         Vector2d position = animal.getPosition();
-        if (canMoveTo(position)) {
-            animals.add(animal);
-            TreeSet<Animal> treeSet = animalsMap.computeIfAbsent(position, k -> new TreeSet<>(comparator));
-            treeSet.add(animal);
-            animal.addObserver(this);
-            return true;
-        }
-        return false;
+        animals.add(animal);
+        TreeSet<Animal> treeSet = animalsMap.computeIfAbsent(position, k -> new TreeSet<>(animalComparator));
+        treeSet.add(animal);
+        animal.addObserver(this);
     }
 
-    @Override
     public void removeDeadAnimals() {
         for (Animal animal: animals){
             if (animal.getEnergy() <= 0) {
+                Vector2d position = animal.getPosition();
+                deathMap[position.x][position.y] ++;
                 animals.remove(animal);
                 animalsMap.get(animal.getPosition()).remove(animal);
             }
         }
     }
 
-    @Override
     public void moveAnimals() {
         for (Animal animal: animals){
             animal.move();
         }
     }
 
-    @Override
     public void eatGrass() {
         for (Grass grass: grasses){
             Vector2d position = grass.getPosition();
-            TreeSet<Animal> treeSet = animalsMap.get(position);
-            if (treeSet != null){
-                treeSet.first().changeEnergy(grassProfit);
+            TreeSet<Animal> competitors = animalsMap.get(position);
+            if (competitors != null){
+                competitors.first().changeEnergy(grassProfit);
                 grasses.remove(grass);
+                if (belongsToJungle(position)) uncoveredJungle.add(position);
+                else uncoveredSteppes.add(position);
             }
         }
     }
 
-    @Override
     public void reproduce() {
+        for (Map.Entry<Vector2d, TreeSet<Animal>> set : animalsMap.entrySet()){
+            TreeSet<Animal> competitors = set.getValue();
+            if (competitors.size() >= 2){
+                Iterator<Animal> it = competitors.iterator();
+                Animal strongerParent = it.next();
+                Animal weakerParent = it.next();
+                if (weakerParent.getEnergy() >= requiredEnergy){
+                    Animal child = new Animal(strongerParent, weakerParent, 2*requiredEnergy, minMutation, maxMutation, mutationVariant);
+                    strongerParent.changeEnergy(-requiredEnergy);
+                    weakerParent.changeEnergy(-requiredEnergy);
+                    place(child);
+                }
+            }
+        }
+    }
 
+    public void spawnGrass(int number) {
+        for (int i=0; i<number; i++) {
+            Random generator = new Random();
+            int n = generator.nextInt(4);
+            if (n == 0) spawnGrassInField(uncoveredSteppes);
+            else spawnGrassInField(uncoveredJungle);
+        }
+    }
+
+    private void spawnGrassInField(TreeSet<Vector2d> uncoveredField){
+        if (uncoveredField.isEmpty()) return;
+        int k = 0;
+        int min = deathMap[uncoveredField.first().x][uncoveredField.first().y];
+        for (Vector2d pos : uncoveredField){
+            if (deathMap[pos.x][pos.y] > min) break;
+            k++;
+        }
+        Random generator = new Random();
+        int index = generator.nextInt(k);
+        Iterator<Vector2d> it = uncoveredField.iterator();
+        for (int i=0; i<index; i++) it.next();
+        Vector2d position = it.next();
+        Grass grass = new Grass(position);
+        grasses.add(grass);
+        uncoveredField.remove(position);
     }
 
     @Override
-    public void spawnGrass() {
-
-    }
-
-    @Override
-    public Vector2d positionChanged(Animal animal, Vector2d oldPosition, Vector2d potentialPosition) {
+    public void positionChanged(Animal animal, Vector2d oldPosition, Vector2d potentialPosition) {
         Vector2d newPosition;
         if (canMoveTo(potentialPosition)) {
             newPosition = potentialPosition;
@@ -117,8 +161,8 @@ public class WorldMap implements IWorldMap, IPositionChangeObserver{
             newPosition = new Vector2d(x, y);
         }
 
+        animal.changePosition(newPosition);
         animalsMap.get(oldPosition).remove(animal);
         animalsMap.get(newPosition).add(animal);
-        return newPosition;
     }
 }
