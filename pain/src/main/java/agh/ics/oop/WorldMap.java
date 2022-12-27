@@ -24,6 +24,9 @@ public class WorldMap implements IPositionChangeObserver{
     private final TreeSet<Vector2d> uncoveredSteppes  = new TreeSet<>(toxicityComparator);
     private Vector2d jungleLowerLeft;
     private Vector2d jungleUpperRight;
+    private int sumOfLifetimesOfDeadAnimals = 0;
+    private int numberOfDeadAnimals = 0;
+    private int day = 0;
 
     public WorldMap(int width, int height, int mapVariant, int grassProfit, int requiredEnergy, int reproductionCost, int minMutation, int maxMutation, int mutationVariant){
         this.width = width;
@@ -59,7 +62,7 @@ public class WorldMap implements IPositionChangeObserver{
         return position.follows(this.lowerLeft) && position.precedes(this.upperRight);
     }
 
-    public void place(Animal animal) {
+    private void place(Animal animal) {
         Vector2d position = animal.getPosition();
         animals.add(animal);
         TreeSet<Animal> treeSet = animalsMap.computeIfAbsent(position, k -> new TreeSet<>(animalComparator));
@@ -74,6 +77,8 @@ public class WorldMap implements IPositionChangeObserver{
                 deathMap[position.x][position.y] ++;
                 animals.remove(animal);
                 animalsMap.get(animal.getPosition()).remove(animal);
+                sumOfLifetimesOfDeadAnimals += animal.getAge();
+                numberOfDeadAnimals ++;
             }
         }
     }
@@ -90,6 +95,7 @@ public class WorldMap implements IPositionChangeObserver{
             TreeSet<Animal> competitors = animalsMap.get(position);
             if (competitors != null){
                 competitors.first().changeEnergy(grassProfit);
+                competitors.first().increaseEatenGrasses();
                 grasses.remove(grass);
                 if (belongsToJungle(position)) uncoveredJungle.add(position);
                 else uncoveredSteppes.add(position);
@@ -108,15 +114,28 @@ public class WorldMap implements IPositionChangeObserver{
                     Animal child = new Animal(strongerParent, weakerParent, 2*requiredEnergy, minMutation, maxMutation, mutationVariant);
                     strongerParent.changeEnergy(-requiredEnergy);
                     weakerParent.changeEnergy(-requiredEnergy);
+                    strongerParent.increaseNumberOfChildren();
+                    weakerParent.increaseNumberOfChildren();
                     place(child);
                 }
             }
         }
     }
 
-    public void spawnGrass(int number) {
+    public void spawnAnimals(int number, int startEnergy, int genomeLength){
+        Random generator = new Random();
         for (int i=0; i<number; i++) {
-            Random generator = new Random();
+            int x = generator.nextInt(width);
+            int y = generator.nextInt(height);
+            Vector2d position = new Vector2d(x, y);
+            Animal animal = new Animal(position, startEnergy, genomeLength);
+            place(animal);
+        }
+    }
+
+    public void spawnGrass(int number) {
+        Random generator = new Random();
+        for (int i=0; i<number; i++) {
             int n = generator.nextInt(4);
             if (n == 0) spawnGrassInField(uncoveredSteppes);
             else spawnGrassInField(uncoveredJungle);
@@ -131,6 +150,7 @@ public class WorldMap implements IPositionChangeObserver{
             if (deathMap[pos.x][pos.y] > min) break;
             k++;
         }
+
         Random generator = new Random();
         int index = generator.nextInt(k);
         Iterator<Vector2d> it = uncoveredField.iterator();
@@ -164,5 +184,65 @@ public class WorldMap implements IPositionChangeObserver{
         animal.changePosition(newPosition);
         animalsMap.get(oldPosition).remove(animal);
         animalsMap.get(newPosition).add(animal);
+    }
+
+    public int getNumberOfAnimals(){
+        return animals.size();
+    }
+
+    public int getNumberOfGrasses(){
+        return grasses.size();
+    }
+
+    public int getNumberOfUncoveredSquares(){
+        return uncoveredJungle.size() + uncoveredSteppes.size();
+    }
+
+    public int[] getMostPopularGenotype(){
+        int max = 0;
+        int[] mostPopular = {};
+        for (Animal animal: animals){
+            int x = 0;
+            int[] genotype = animal.getGenotype();
+            for (Animal other: animals){
+                if (Arrays.equals(genotype, other.getGenotype())) x++;
+            }
+            if (x > max){
+                max = x;
+                mostPopular = genotype;
+            }
+        }
+        return mostPopular;
+    }
+
+    public int getAverageEnergyOfAliveAnimals(){
+        int s = 0;
+        for (Animal animal : animals) s += animal.getEnergy();
+        return s / animals.size();
+    }
+
+    public int getAverageLifetimeOfDeadAnimals(){
+        return sumOfLifetimesOfDeadAnimals / numberOfDeadAnimals;
+    }
+
+    public LinkedList<Animal> getAnimalsHavingMostPopularGenotype(){
+        int[] genotype = getMostPopularGenotype();
+        LinkedList<Animal> mostPopularAnimals = new LinkedList<>();
+        for (Animal animal : animals) {
+            if (Arrays.equals(genotype, animal.getGenotype())) mostPopularAnimals.add(animal);
+        }
+        return mostPopularAnimals;
+    }
+
+    public void nextDay(){
+        day ++;
+        for (Animal animal : animals) {
+            animal.increaseAge();
+            animal.changeEnergy(-1);
+        }
+    }
+
+    public int getDay() {
+        return day;
     }
 }
