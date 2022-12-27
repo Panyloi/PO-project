@@ -5,11 +5,14 @@ public class Animal {
     public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
     }
 
+    public Animal(Vector2d position, int startEnergy, int genomeLength) {
+    }
+
     public Vector2d getPosition() {
         return null;
     }
 
-    public void addObserver(WorldMap WorldMap) {
+    public void addObserver(IPositionChangeObserver observer) {
     }
 
     public int getEnergy() {
@@ -34,5 +37,18 @@ public class Animal {
     }
 
     public void changePosition(Vector2d newPosition) {
+    }
+
+    public int[] getGenotype() {
+        return new int[0];
+    }
+
+    public void increaseAge() {
+    }
+
+    public void increaseEatenGrasses() {
+    }
+
+    public void increaseNumberOfChildren() {
     }
 }
