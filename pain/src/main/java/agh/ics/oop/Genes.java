@@ -44,7 +44,7 @@ public class Genes {
     }
 
     public int nextGene(){
-        iterator = (iterator + 1) % 8;
+        iterator = (iterator + 1) % size;
         return genes[iterator];
     }
 
@@ -52,7 +52,7 @@ public class Genes {
         return rnd.nextInt(8);
     }
     private int randomIterator(){
-        return rnd.nextInt(8);
+        return rnd.nextInt(size);
     }
     public void fullRandomness(int minMutation, int maxMutation){
         int amountOfMutation = maxMutation - minMutation;
