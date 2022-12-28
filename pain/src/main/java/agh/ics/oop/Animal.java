@@ -1,5 +1,6 @@
 package agh.ics.oop;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
 public class Animal implements IMapElement{
@@ -23,6 +24,12 @@ public class Animal implements IMapElement{
         this.children = 0;
     }
 
+    // to fill constructors
+    public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
+    }
+
+    public Animal(Vector2d position, int startEnergy, int genomeLength) {
+    }
 
 
     public Animal(int size, IWorldMap map){
@@ -93,9 +100,21 @@ public class Animal implements IMapElement{
         }
     }
 
-    public void positionChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition){
-        for (IPositionChangeObserver observer : observers){
+    public void positionChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition) {
+        for (IPositionChangeObserver observer : observers) {
             observer.positionChanged(animal, oldPosition, newPosition);
         }
     }
+    public void changePosition(Vector2d newPosition) {
+    }
+    public int[] getGenotype() {
+        return new int[0];
+    }
+    public void increaseAge() {
+    }
+    public void increaseEatenGrasses() {
+    }
+    public void increaseNumberOfChildren() {
+    }
+
 }
