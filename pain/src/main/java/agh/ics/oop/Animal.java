@@ -1,6 +1,4 @@
 package agh.ics.oop;
-
-<<<<<<< HEAD
 import java.util.ArrayList;
 
 public class Animal implements IMapElement{

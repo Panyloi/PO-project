@@ -5,31 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="82ca210b-f072-469c-9f9c-ad46f5842ba2" name="Changes" comment="Create IMapElement as interface">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/ToxicityComparator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/IRefreshObserver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/SimulationEngine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/ToxicityComparator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Animal.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Animal.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Grass.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Grass.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IPositionChangeObserver.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IPositionChangeObserver.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/World.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/World.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/WorldMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/WorldMap.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Animal.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Animal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Grass.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Grass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/IPositionChangeObserver.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/IPositionChangeObserver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/World.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/WorldMap.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,24 +54,12 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "/home/hiro/Documents/PO/PO-project"
+    "last_opened_file_path": "/home/hiro/Documents/PO/PO-project",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="PO-project" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="PO-project" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
