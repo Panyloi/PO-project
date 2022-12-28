@@ -23,6 +23,8 @@ public class Animal implements IMapElement{
         this.children = 0;
     }
 
+
+
     public Animal(int size, IWorldMap map){
         this(size);
         this.map = map;
@@ -39,7 +41,7 @@ public class Animal implements IMapElement{
     }
 
     public boolean isAlive(){ // return true if this animal is still alive
-        return energy >= 0;
+        return energy > 0;
     }
 
     @Override
