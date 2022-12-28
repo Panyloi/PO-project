@@ -13,40 +13,28 @@ public class Animal implements IMapElement{
     public int age;
     public int children;
 
-    public Animal(int size){
-        this.direction = MapDirection.NORTH;
-        this.lengthOfGenes = size;
-        this.genes = new Genes(size);
-        this.position = new Vector2d(1, 1);
-        this.age = 0;
-        this.children = 0;
-    }
-
     // to fill constructors
     public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
     }
 
     public Animal(Vector2d position, int startEnergy, int genomeLength) {
+        this.direction = MapDirection.NORTH;
+        this.lengthOfGenes = genomeLength;
+        this.genes = new Genes(genomeLength);
+        this.position = position;
+        this.age = 0;
+        this.children = 0;
+        this.energy = startEnergy;
     }
 
 
-    public Animal(int size, IWorldMap map){
-        this(size);
+    public Animal(Vector2d position, int startEnergy, int genomeLength, IWorldMap map){
+        this(position, startEnergy, genomeLength);
         this.map = map;
     }
 
-    public Animal(int size, IWorldMap map, Vector2d initialPosition){
-        this(size, map);
-        this.position = initialPosition;
-    }
-
-    public Animal(int size, IWorldMap map, Vector2d initialPosition, int energy){
-        this(size, map, initialPosition);
-        this.energy = energy;
-    }
-
-    public boolean isAlive(){ // return true if this animal is still alive
-        return energy > 0;
+    public boolean isDead(){ // return true if this animal is still alive
+        return energy <= 0;
     }
 
     @Override
@@ -63,14 +51,7 @@ public class Animal implements IMapElement{
     }
 
     public void turnBack() {
-        switch (this.direction){
-            case NORTH -> this.direction = MapDirection.SOUTH;
-            case NORTHEAST -> this.direction = MapDirection.SOUTHWEST;
-            case NORTHWEST -> this.direction = MapDirection.SOUTHEAST;
-            case SOUTH -> this.direction = MapDirection.NORTH;
-            case SOUTHEAST -> this.direction = MapDirection.NORTHWEST;
-            case SOUTHWEST -> this.direction = MapDirection.NORTHEAST;
-        }
+        this.direction = this.direction.rotate(4);
     }
 
     public void changeEnergy(int i) {
@@ -104,6 +85,7 @@ public class Animal implements IMapElement{
         }
     }
     public void changePosition(Vector2d newPosition) {
+        this.position = newPosition;
     }
     public int[] getGenotype() {
         return new int[0];
