@@ -28,7 +28,7 @@ public class Genes {
     }
 
     public int randomGene(){
-        return (int) rnd.nextDouble() * 8;
+        return rnd.nextInt(8);
     }
 
 }
