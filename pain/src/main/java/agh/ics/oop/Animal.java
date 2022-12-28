@@ -1,30 +1,48 @@
 package agh.ics.oop;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Animal implements IMapElement{
-    public IWorldMap map;
-    public int energy;
+    private IWorldMap map;
+    private int energy;
     public MapDirection direction;
-    public int startEnergy;
     public ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
-    public Genes genes;
-    public int lengthOfGenes;
-    public Vector2d position;
-    public int age;
-    public int children;
+    private Genes genes;
+    private final int lengthOfGenes;
+    private Vector2d position;
+    private int age;
+    private int children;
+    private int eatenGrass;
+    Random rnd = new Random();
 
-    // to fill constructors
+    // losowy kierunek
+    //
     public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
+        this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
+        this.position = strongerParent.getPosition();
+        this.age = 0;
+        this.children = 0;
+        this.lengthOfGenes = strongerParent.getLengthOfGenes();
+        this.eatenGrass = 0;
+        this.energy = energy;
+
+        int proportion = this.proportion(strongerParent.getEnergy(), weakerParent.getEnergy(), strongerParent.getLengthOfGenes());
+        int side = rnd.nextInt(2);
+
+        this.genes = new Genes(strongerParent.getGenotype(), weakerParent.getGenotype(), side, lengthOfGenes, proportion);
+        if (mutationVariant == 0) this.genes.fullRandomness(minMutation, maxMutation);
+        else this.genes.slightCorrection(minMutation, maxMutation);
     }
 
     public Animal(Vector2d position, int startEnergy, int genomeLength) {
-        this.direction = MapDirection.NORTH;
+        this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
         this.lengthOfGenes = genomeLength;
         this.genes = new Genes(genomeLength);
         this.position = position;
         this.age = 0;
         this.children = 0;
         this.energy = startEnergy;
+        this.eatenGrass = 0;
     }
 
 
@@ -33,8 +51,11 @@ public class Animal implements IMapElement{
         this.map = map;
     }
 
-    public boolean isDead(){ // return true if this animal is still alive
+    public boolean isDead(){ // return true if this animal is dead
         return energy <= 0;
+    }
+    public int getLengthOfGenes(){
+        return this.lengthOfGenes;
     }
 
     @Override
@@ -88,13 +109,18 @@ public class Animal implements IMapElement{
         this.position = newPosition;
     }
     public int[] getGenotype() {
-        return new int[0];
+        return genes.getGenes();
     }
     public void increaseAge() {
+        this.age += 1;
     }
     public void increaseEatenGrasses() {
+        this.eatenGrass += 1;
     }
     public void increaseNumberOfChildren() {
+        this.children += 1;
     }
-
+    public int proportion(int energy1, int energy2, int length){
+        return (int) (energy1 / (energy1 + energy2)) * length;
+    }
 }
