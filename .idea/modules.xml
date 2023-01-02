@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PO-project.iml" filepath="$PROJECT_DIR$/.idea/PO-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pain.iml" filepath="$PROJECT_DIR$/.idea/modules/pain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pain.main.iml" filepath="$PROJECT_DIR$/.idea/modules/pain.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pain.test.iml" filepath="$PROJECT_DIR$/.idea/modules/pain.test.iml" />
     </modules>
   </component>
 </project>

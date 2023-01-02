@@ -245,4 +245,36 @@ public class WorldMap implements IPositionChangeObserver{
     public int getDay() {
         return day;
     }
+
+    public Vector2d getJungleLowerLeft() {
+        return this.jungleLowerLeft;
+    }
+    public Vector2d getJungleUpperRight(){
+        return this.jungleUpperRight;
+    }
+    public Vector2d getUpperRight(){
+        return this.upperRight;
+    }
+    public LinkedList<Animal> getAnimals(){
+        return this.animals;
+    }
+    public LinkedList<Grass> getGrasses(){
+        return this.grasses;
+    }
+    public Object objectAt(Vector2d position) {
+        TreeSet<Animal> positions = this.animalsMap.get(position);
+        if (positions == null || positions.size() == 0) {
+            return getGrassFromPosition(position);
+        } else
+            return positions.first();
+    }
+
+    public Object getGrassFromPosition(Vector2d position){
+        for (Grass grass : grasses){
+            if (grass.getPosition().equals(position)){
+                return grass;
+            }
+        }
+        return null;
+    }
 }

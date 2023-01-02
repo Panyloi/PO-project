@@ -19,4 +19,8 @@ public class Grass implements IMapElement{
     public String toString(){
         return "Grass: " + this.position.toString();
     }
+    @Override
+    public String getImagePath() {
+        return "src/main/resources/carrot.png";
+    }
 }

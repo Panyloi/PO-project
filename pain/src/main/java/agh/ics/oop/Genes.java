@@ -22,6 +22,7 @@ public class Genes {
     public Genes(int[] genes1, int[] genes2, int side, int size, int amountOfStrongerGene) { // genes1 - stronger genes
         this.genes = new int[size];
         this.size = size;
+        this.iterator = this.randomIterator();
         if (side == 0) { // left side of genes are from stronger animal
             if (amountOfStrongerGene >= 0) System.arraycopy(genes1, 0, this.genes, 0, amountOfStrongerGene);
 
@@ -45,6 +46,9 @@ public class Genes {
 
     public int nextGene(){
         iterator = (iterator + 1) % size;
+        return genes[iterator];
+    }
+    public int getActiveGene(){
         return genes[iterator];
     }
 

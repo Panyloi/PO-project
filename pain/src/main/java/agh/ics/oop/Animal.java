@@ -8,6 +8,7 @@ public class Animal implements IMapElement{
     public MapDirection direction;
     public ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
     private Genes genes;
+    private int startingEnergy;
     private final int lengthOfGenes;
     private Vector2d position;
     private int age;
@@ -15,10 +16,9 @@ public class Animal implements IMapElement{
     private int eatenGrass;
     Random rnd = new Random();
 
-    // losowy kierunek
-    //
     public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
         this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
+        this.startingEnergy = energy;
         this.position = strongerParent.getPosition();
         this.age = 0;
         this.children = 0;
@@ -37,6 +37,7 @@ public class Animal implements IMapElement{
     public Animal(Vector2d position, int startEnergy, int genomeLength) {
         this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
         this.lengthOfGenes = genomeLength;
+        this.startingEnergy = energy;
         this.genes = new Genes(genomeLength);
         this.position = position;
         this.age = 0;
@@ -122,5 +123,22 @@ public class Animal implements IMapElement{
     }
     public int proportion(int energy1, int energy2, int length){
         return (int) (energy1 / (energy1 + energy2)) * length;
+    }
+    @Override
+    public String getImagePath() {
+        if (this.energy >= 0.75 * this.startingEnergy)
+            return "src/main/resources/green_rabbit.png";
+        else if (this.energy >= 0.5 * this.startingEnergy)
+            return "src/main/resources/light_green_rabbit.png";
+        else if (this.energy >= 0.25 * this.startingEnergy)
+            return "src/main/resources/yellow_rabbit.png";
+        else
+            return "src/main/resources/red_rabbit.png";
+    }
+    public int getActiveGene(){
+        return this.genes.getActiveGene();
+    }
+    public int getEatenGrass(){
+        return this.eatenGrass;
     }
 }
