@@ -22,25 +22,26 @@ public class SimulationEngine implements Runnable{
     }
 
     @Override
+    @SuppressWarnings("InfiniteLoopStatement")
     public void run() {
         stopped = false;
-        while (!stopped) {
-            Platform.runLater(() -> {
-                this.app.refresh(this.map, false);
-            });
-            try{
+        while (true) {
+            try {
                 Thread.sleep(this.delay);
-            }
-            catch (InterruptedException ex) {
+            } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             }
-
-            map.removeDeadAnimals();
-            map.moveAnimals();
-            map.eatGrass();
-            map.reproduce();
-            map.spawnGrass(dailyGrass);
-            map.nextDay();
+            if (!stopped) {
+                Platform.runLater(() -> {
+                    this.app.refresh(this.map, false);
+                });
+                map.removeDeadAnimals();
+                map.moveAnimals();
+                map.eatGrass();
+                map.reproduce();
+                map.spawnGrass(dailyGrass);
+                map.nextDay();
+            }
         }
     }
 

@@ -50,8 +50,8 @@ public class App extends Application{
     private VBox optionsVBox;
     private LineChart<Number, Number> mapLineChart;
     private final XYChart.Series<Number, Number> mapDataSeries1 = new XYChart.Series<>();
-    private final XYChart.Series<Number, Number> mapDataSeries3 = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> mapDataSeries2 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> mapDataSeries3 = new XYChart.Series<>();
     private final XYChart.Series<Number, int[]> mapDataSeries4 = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> mapDataSeries5 = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> mapDataSeries6 = new XYChart.Series<>();
@@ -442,16 +442,16 @@ public class App extends Application{
 //        this.mapDataSeries4.getData().add(new XYChart.Data<>(map.getDay(), map.getMostPopularGenotype()));
         this.mapDataSeries5.getData().add(new XYChart.Data<>(map.getDay(), map.getAverageEnergyOfAliveAnimals()));
         this.mapDataSeries6.getData().add(new XYChart.Data<>(map.getDay(), map.getAverageLifetimeOfDeadAnimals()));
-        try {
-            this.mapLineChart.getData().add(this.mapDataSeries1);
-            this.mapLineChart.getData().add(this.mapDataSeries2);
-            this.mapLineChart.getData().add(this.mapDataSeries3);
-//            this.mapLineChart.getData().add(this.mapDataSeries4);
-            this.mapLineChart.getData().add(this.mapDataSeries5);
-            this.mapLineChart.getData().add(this.mapDataSeries6);
-        } catch (IllegalArgumentException e){
-            return;
-        }
+//        try {
+//            this.mapLineChart.getData().add(this.mapDataSeries1);
+//            this.mapLineChart.getData().add(this.mapDataSeries2);
+//            this.mapLineChart.getData().add(this.mapDataSeries3);
+////            this.mapLineChart.getData().add(this.mapDataSeries4);
+//            this.mapLineChart.getData().add(this.mapDataSeries5);
+//            this.mapLineChart.getData().add(this.mapDataSeries6);
+//        } catch (IllegalArgumentException e){
+//            return;
+//        }
 
     }
 

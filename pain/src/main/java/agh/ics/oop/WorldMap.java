@@ -111,7 +111,7 @@ public class WorldMap implements IPositionChangeObserver{
                 Animal strongerParent = it.next();
                 Animal weakerParent = it.next();
                 if (weakerParent.getEnergy() >= requiredEnergy){
-                    Animal child = new Animal(strongerParent, weakerParent, 2*requiredEnergy, minMutation, maxMutation, mutationVariant);
+                    Animal child = new Animal(this, strongerParent, weakerParent, 2*requiredEnergy, minMutation, maxMutation, mutationVariant);
                     strongerParent.changeEnergy(-requiredEnergy);
                     weakerParent.changeEnergy(-requiredEnergy);
                     strongerParent.increaseNumberOfChildren();
@@ -128,7 +128,7 @@ public class WorldMap implements IPositionChangeObserver{
             int x = generator.nextInt(width);
             int y = generator.nextInt(height);
             Vector2d position = new Vector2d(x, y);
-            Animal animal = new Animal(position, startEnergy, genomeLength);
+            Animal animal = new Animal(this, position, startEnergy, genomeLength);
             place(animal);
         }
     }
@@ -183,7 +183,12 @@ public class WorldMap implements IPositionChangeObserver{
 
         animal.changePosition(newPosition);
         animalsMap.get(oldPosition).remove(animal);
-        animalsMap.get(newPosition).add(animal);
+        if (!animalsMap.containsKey(newPosition)){
+            TreeSet<Animal> treeSet = animalsMap.computeIfAbsent(newPosition, k -> new TreeSet<>(animalComparator));
+            treeSet.add(animal);
+        } else {
+            animalsMap.get(newPosition).add(animal);
+        }
     }
 
     public int getNumberOfAnimals(){
@@ -222,6 +227,7 @@ public class WorldMap implements IPositionChangeObserver{
     }
 
     public int getAverageLifetimeOfDeadAnimals(){
+        if (numberOfDeadAnimals == 0){return 0;}
         return sumOfLifetimesOfDeadAnimals / numberOfDeadAnimals;
     }
 

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Animal implements IMapElement{
-    private IWorldMap map;
+    private WorldMap map;
     private int energy;
     public MapDirection direction;
     public ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
@@ -16,8 +16,10 @@ public class Animal implements IMapElement{
     private int eatenGrass;
     Random rnd = new Random();
 
-    public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
+    public Animal(WorldMap map, Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
         this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
+        this.rnd = new Random();
+        this.map = map;
         this.startingEnergy = energy;
         this.position = strongerParent.getPosition();
         this.age = 0;
@@ -34,8 +36,9 @@ public class Animal implements IMapElement{
         else this.genes.slightCorrection(minMutation, maxMutation);
     }
 
-    public Animal(Vector2d position, int startEnergy, int genomeLength) {
+    public Animal(WorldMap map, Vector2d position, int startEnergy, int genomeLength) {
         this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
+        this.rnd = new Random();
         this.lengthOfGenes = genomeLength;
         this.startingEnergy = energy;
         this.genes = new Genes(genomeLength);
@@ -44,13 +47,14 @@ public class Animal implements IMapElement{
         this.children = 0;
         this.energy = startEnergy;
         this.eatenGrass = 0;
-    }
-
-
-    public Animal(Vector2d position, int startEnergy, int genomeLength, IWorldMap map){
-        this(position, startEnergy, genomeLength);
         this.map = map;
     }
+
+
+//    public Animal(Vector2d position, int startEnergy, int genomeLength, WorldMap map){
+//        this(position, startEnergy, genomeLength);
+//        this.map = map;
+//    }
 
     public boolean isDead(){ // return true if this animal is dead
         return energy <= 0;
@@ -94,11 +98,10 @@ public class Animal implements IMapElement{
 
         Vector2d toMove = position.add(geneDirection.toUnitVector());
 
-        if (map.canMoveTo(toMove)){
-            Vector2d positionToDelete = new Vector2d(position.x, position.y);
-            this.position = this.position.add(geneDirection.toUnitVector());
-            this.positionChanged(this, positionToDelete, this.position);
-        }
+
+        Vector2d positionToDelete = new Vector2d(position.x, position.y);
+//        this.position = this.position.add(geneDirection.toUnitVector());
+        this.positionChanged(this, positionToDelete, toMove);
     }
 
     public void positionChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition) {

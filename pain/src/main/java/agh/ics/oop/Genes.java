@@ -7,12 +7,11 @@ public class Genes {
     public int[] genes;
     private int iterator;
     private final int size;
-    Random rnd;
+    Random rnd = new Random();
     public Genes(int size){
         this.size = size;
         this.genes = new int[size];
         this.iterator = this.randomIterator();
-        this.rnd = new Random();
 
         for(int i = 0; i<size; i++){
             int genotype = this.randomGene();

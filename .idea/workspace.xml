@@ -4,45 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="82ca210b-f072-469c-9f9c-ad46f5842ba2" name="Changes" comment="Implemented Grass methods">
-      <change beforePath="$PROJECT_DIR$/.idea/PO-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PO-project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/7.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/pain/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Animal$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Animal.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Animal.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/AnimalComparator.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/AnimalComparator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Genes.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Genes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Grass.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Grass.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IMapElement.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IMapElement.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IPositionChangeObserver.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IPositionChangeObserver.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IWorldMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/IWorldMap.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/MapDirection$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/MapDirection$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/MapDirection.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/MapDirection.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/ToxicityComparator.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/ToxicityComparator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Vector2d.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/Vector2d.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/World.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/World.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/WorldMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/classes/java/main/agh/ics/oop/WorldMap.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/pain/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Animal.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Animal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Genes.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Genes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Grass.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/Grass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/IMapElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/IMapElement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/SimulationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/SimulationEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/World.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/WorldMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/gui/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/pain/src/main/java/agh/ics/oop/gui/App.java" afterDir="false" />
-    </list>
+    <list default="true" id="82ca210b-f072-469c-9f9c-ad46f5842ba2" name="Changes" comment="Implemented Grass methods" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,18 +46,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "/home/hiro/Documents/PO/Object_oriented_programming_course_AGH/Project_1",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/hiro/Documents/PO/Object_oriented_programming_course_AGH/Project_1&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="World" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="agh.ics.oop.World" />
