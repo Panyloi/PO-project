@@ -71,15 +71,19 @@ public class WorldMap implements IPositionChangeObserver{
     }
 
     public void removeDeadAnimals() {
+        LinkedList<Animal> animalsToRemove = new LinkedList<>();
         for (Animal animal: animals){
             if (animal.getEnergy() <= 0) {
                 Vector2d position = animal.getPosition();
                 deathMap[position.x][position.y] ++;
-                animals.remove(animal);
+                animalsToRemove.add(animal);
                 animalsMap.get(animal.getPosition()).remove(animal);
                 sumOfLifetimesOfDeadAnimals += animal.getAge();
                 numberOfDeadAnimals ++;
             }
+        }
+        for (Animal animal : animalsToRemove){
+            animals.remove(animal);
         }
     }
 
@@ -89,20 +93,37 @@ public class WorldMap implements IPositionChangeObserver{
         }
     }
 
+//    public void eatGrass() {
+//        for (Grass grass: grasses){
+//            Vector2d position = grass.getPosition();
+//            TreeSet<Animal> competitors = animalsMap.get(position);
+//            if (competitors != null && competitors.size() > 0){
+//                competitors.first().changeEnergy(grassProfit);
+//                competitors.first().increaseEatenGrasses();
+//                grasses.remove(grass);
+//                if (belongsToJungle(position)) uncoveredJungle.add(position);
+//                else uncoveredSteppes.add(position);
+//            }
+//        }
+//    }
     public void eatGrass() {
+        LinkedList<Grass> grassesToRemove = new LinkedList<>();
         for (Grass grass: grasses){
             Vector2d position = grass.getPosition();
             TreeSet<Animal> competitors = animalsMap.get(position);
-            if (competitors != null){
+            if (competitors != null && !competitors.isEmpty()){
                 competitors.first().changeEnergy(grassProfit);
                 competitors.first().increaseEatenGrasses();
-                grasses.remove(grass);
+                grassesToRemove.add(grass);
                 if (belongsToJungle(position)) uncoveredJungle.add(position);
                 else uncoveredSteppes.add(position);
             }
         }
-    }
 
+        for (Grass grass: grassesToRemove){
+            grasses.remove(grass);
+        }
+    }
     public void reproduce() {
         for (Map.Entry<Vector2d, TreeSet<Animal>> set : animalsMap.entrySet()){
             TreeSet<Animal> competitors = set.getValue();
@@ -111,9 +132,9 @@ public class WorldMap implements IPositionChangeObserver{
                 Animal strongerParent = it.next();
                 Animal weakerParent = it.next();
                 if (weakerParent.getEnergy() >= requiredEnergy){
-                    Animal child = new Animal(this, strongerParent, weakerParent, 2*requiredEnergy, minMutation, maxMutation, mutationVariant);
-                    strongerParent.changeEnergy(-requiredEnergy);
-                    weakerParent.changeEnergy(-requiredEnergy);
+                    Animal child = new Animal(this, strongerParent, weakerParent, 2*reproductionCost, minMutation, maxMutation, mutationVariant);
+                    strongerParent.changeEnergy(-reproductionCost);
+                    weakerParent.changeEnergy(-reproductionCost);
                     strongerParent.increaseNumberOfChildren();
                     weakerParent.increaseNumberOfChildren();
                     place(child);
@@ -171,7 +192,8 @@ public class WorldMap implements IPositionChangeObserver{
                 animal.turnBack();
                 newPosition = oldPosition;
             } else {
-                newPosition = new Vector2d(potentialPosition.x % width, potentialPosition.y);
+                if (potentialPosition.x < 0) newPosition = new Vector2d(upperRight.x, potentialPosition.y);
+                else newPosition = new Vector2d(0, potentialPosition.y);
             }
         } else {
             animal.changeEnergy(-reproductionCost);
@@ -183,12 +205,9 @@ public class WorldMap implements IPositionChangeObserver{
 
         animal.changePosition(newPosition);
         animalsMap.get(oldPosition).remove(animal);
-        if (!animalsMap.containsKey(newPosition)){
-            TreeSet<Animal> treeSet = animalsMap.computeIfAbsent(newPosition, k -> new TreeSet<>(animalComparator));
-            treeSet.add(animal);
-        } else {
-            animalsMap.get(newPosition).add(animal);
-        }
+        TreeSet<Animal> treeSet = animalsMap.computeIfAbsent(newPosition, k -> new TreeSet<>(animalComparator));
+        treeSet.add(animal);
+
     }
 
     public int getNumberOfAnimals(){
@@ -223,6 +242,7 @@ public class WorldMap implements IPositionChangeObserver{
     public int getAverageEnergyOfAliveAnimals(){
         int s = 0;
         for (Animal animal : animals) s += animal.getEnergy();
+        if (animals.size() == 0) return 0;
         return s / animals.size();
     }
 
@@ -262,7 +282,14 @@ public class WorldMap implements IPositionChangeObserver{
         return this.upperRight;
     }
     public LinkedList<Animal> getAnimals(){
-        return this.animals;
+        LinkedList<Animal> copyAnimals = new LinkedList<>();
+        for (Map.Entry<Vector2d, TreeSet<Animal>> set : animalsMap.entrySet()){
+            TreeSet<Animal> competitors = set.getValue();
+            if (competitors.size() > 0){
+                copyAnimals.add(competitors.first());
+            }
+        }
+        return copyAnimals;
     }
     public LinkedList<Grass> getGrasses(){
         return this.grasses;

@@ -19,6 +19,7 @@ public class SimulationEngine implements Runnable{
         this.dailyGrass = dailyGrass;
         this.map.spawnGrass(startGrass);
         this.map.spawnAnimals(startAnimals, startEnergy, genomeLength);
+
     }
 
     @Override
@@ -32,15 +33,13 @@ public class SimulationEngine implements Runnable{
                 throw new RuntimeException(ex);
             }
             if (!stopped) {
-                Platform.runLater(() -> {
-                    this.app.refresh(this.map, false);
-                });
                 map.removeDeadAnimals();
                 map.moveAnimals();
                 map.eatGrass();
                 map.reproduce();
                 map.spawnGrass(dailyGrass);
                 map.nextDay();
+                notifyObservers();
             }
         }
     }

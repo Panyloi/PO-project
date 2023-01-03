@@ -44,7 +44,7 @@ public class Genes {
     }
 
     public int nextGene(){
-        iterator = (iterator + 1) % size;
+        this.iterator = (iterator + 1) % size;
         return genes[iterator];
     }
     public int getActiveGene(){

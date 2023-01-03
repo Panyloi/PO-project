@@ -95,6 +95,7 @@ public class Animal implements IMapElement{
     public void move() {
         int gene = genes.nextGene();
         MapDirection geneDirection = direction.rotate(gene);
+        this.direction = geneDirection;
 
         Vector2d toMove = position.add(geneDirection.toUnitVector());
 
@@ -137,6 +138,16 @@ public class Animal implements IMapElement{
             return "src/main/resources/yellow_rabbit.png";
         else
             return "src/main/resources/red_rabbit.png";
+    }
+    public String getColorImage(){
+        if (this.energy >= 0.75 * this.startingEnergy)
+            return "-fx-background-color: #1C130F";
+        else if (this.energy >= 0.5 * this.startingEnergy)
+            return "-fx-background-color: #DE6F0D";
+        else if (this.energy >= 0.25 * this.startingEnergy)
+            return "-fx-background-color: #C7C706";
+        else
+            return "-fx-background-color: #BA1E47";
     }
     public int getActiveGene(){
         return this.genes.getActiveGene();

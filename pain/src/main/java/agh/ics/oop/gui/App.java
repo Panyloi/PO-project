@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.*;
 
-public class App extends Application{
+public class App extends Application implements IRefreshObserver{
     private TextField heightTextField;
     private TextField widthTextField;
     private TextField startedEnergyTextField;
@@ -49,17 +49,20 @@ public class App extends Application{
     private VBox generalVBox;
     private VBox optionsVBox;
     private LineChart<Number, Number> mapLineChart;
-    private final XYChart.Series<Number, Number> mapDataSeries1 = new XYChart.Series<>();
-    private final XYChart.Series<Number, Number> mapDataSeries2 = new XYChart.Series<>();
-    private final XYChart.Series<Number, Number> mapDataSeries3 = new XYChart.Series<>();
-    private final XYChart.Series<Number, int[]> mapDataSeries4 = new XYChart.Series<>();
-    private final XYChart.Series<Number, Number> mapDataSeries5 = new XYChart.Series<>();
-    private final XYChart.Series<Number, Number> mapDataSeries6 = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> mapDataSeries1 = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> mapDataSeries2 = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> mapDataSeries3 = new XYChart.Series<>();
+    private XYChart.Series<Number, int[]> mapDataSeries4 = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> mapDataSeries5 = new XYChart.Series<>();
+    private XYChart.Series<Number, Number> mapDataSeries6 = new XYChart.Series<>();
     private Thread threadEngine;
     private VBox plotAndGenotypeVBox;
+    private VBox sumarizeTextPlotVBox;
+    private HBox sumarizePlotHBox;
     private HBox genotypeHBox;
     private boolean mapWaitingThread = false;
     private SimulationEngine engine;
+    private boolean flag = false;
 
     @Override
     public void start(Stage primaryStage) {
@@ -173,7 +176,7 @@ public class App extends Application{
         }
     }
 
-    public void refresh(WorldMap map, boolean stop){
+    public void draw(WorldMap map, boolean stop){
         this.mapGridPane.setGridLinesVisible(false);
         this.mapGridPane.getColumnConstraints().clear();
         this.mapGridPane.getRowConstraints().clear();
@@ -184,7 +187,15 @@ public class App extends Application{
             placeAnimal(map);
         }
         updateLineChart(map);
+        updateTextPlot();
         updateDominantGenotype();
+    }
+    @Override
+    public void refresh(){
+        Platform.runLater(() -> {
+//            this.app.refresh(this.map, false);
+            draw(mapSimulation, false);
+        });
     }
 
     private HBox createHeadLineText(String text, int size){
@@ -229,30 +240,43 @@ public class App extends Application{
                     Integer.parseInt(this.startedAmountOfAnimalTextField.getText()),
                     Integer.parseInt(this.startedEnergyTextField.getText()),
                     Integer.parseInt(this.genotypeLengthTextField.getText()));
+            this.engine.addObserver((IRefreshObserver) this);
 
             this.generalVBox.getChildren().remove(this.optionsVBox);
 
-            // Options
-            VBox optionButtons = createOptionButtons();
-            HBox gridPaneHBox = new HBox(this.mapGridPane, optionButtons);
-            gridPaneHBox.setSpacing(10);
-            gridPaneHBox.setAlignment(Pos.CENTER);
+            // Options in text field
+//            this.sumarizeTextPlotVBox = createTextPlot(this.mapSimulation);
 
             // Plot
             VBox mapSimulationVBox = createPlot(this.mapSimulation);
+//            mapSimulationVBox.getChildren().add(this.sumarizeTextPlotVBox);
             HBox plotHBox = new HBox(mapSimulationVBox);
             plotHBox.setSpacing(100); // to check if needed
-            plotHBox.setAlignment(Pos.CENTER);
+            plotHBox.setAlignment(Pos.TOP_RIGHT);
 
             // Dominant genotype
             VBox mapSimulationGenotypeVBox = createDominantGenotype(this.mapSimulation);
             this.genotypeHBox = new HBox(mapSimulationGenotypeVBox);
-            this.genotypeHBox.setSpacing(10); // to check if neeeded
+            this.genotypeHBox.setSpacing(30); // to check if neeeded
             this.genotypeHBox.setAlignment(Pos.CENTER);
-
             this.plotAndGenotypeVBox = new VBox(plotHBox, this.genotypeHBox);
 
+            // Text from plot
+            VBox textFromPlotVBox = createTextPlot(this.mapSimulation);
+            this.sumarizePlotHBox = new HBox(textFromPlotVBox);
+            this.sumarizePlotHBox.setSpacing(30); // to check if neeeded
+            this.sumarizePlotHBox.setAlignment(Pos.TOP_RIGHT);
+            this.sumarizeTextPlotVBox = new VBox(this.sumarizePlotHBox);
+
+            // Options
+            VBox optionButtons = createOptionButtons();
+            HBox gridPaneHBox = new HBox(this.mapGridPane, optionButtons, sumarizeTextPlotVBox, mapSimulationVBox, plotAndGenotypeVBox);
+            gridPaneHBox.setSpacing(10);
+            gridPaneHBox.setAlignment(Pos.TOP_LEFT);
+
+
             this.generalVBox.getChildren().addAll(gridPaneHBox, this.plotAndGenotypeVBox);
+
             this.generalVBox.setSpacing(10);
             this.threadEngine = new Thread(engine);
             this.threadEngine.start();
@@ -270,8 +294,8 @@ public class App extends Application{
         int mapUpper = map.getUpperRight().y;
         Vector2d jungleLowerLeft = map.getJungleLowerLeft();
         Vector2d jungleUpperRight = map.getJungleUpperRight();
-        this.gridWidth = 340 / Integer.parseInt(this.widthTextField.getText());
-        this.gridHeight = 340 / Integer.parseInt(this.heightTextField.getText());
+        this.gridWidth = 800 / Integer.parseInt(this.widthTextField.getText());
+        this.gridHeight = 800 / Integer.parseInt(this.heightTextField.getText());
 
         for (int i = 0; i <= mapRight; i++) {
             this.mapGridPane.getColumnConstraints().add(new ColumnConstraints(this.gridWidth));
@@ -296,35 +320,64 @@ public class App extends Application{
     }
 
     private void placeAnimal(WorldMap map){
-        Vector2d[] animalsAndGrasses = getAnimalsAndGrasses(map);
+        ArrayList<Vector2d> animalsAndGrasses = getAnimalsAndGrasses(map);
+//        for (int i = 0; i < map.getUpperRight().x; i++){
+//            for (int j = 0; j < map.getUpperRight().y; i++){
+//                Vector2d newPosition = new Vector2d(i, j);
+//                if ((IMapElement) map.objectAt(newPosition) != null){
+//                    VBox vBox;
+//                    GuiElementBox guiElementBox = new GuiElementBox((IMapElement) map.objectAt(newPosition));
+//                    ImageView imageView = guiElementBox.getImageView();
+//                    imageView.setFitWidth(this.gridWidth);
+//                    imageView.setFitHeight(this.gridHeight);
+//                    vBox = new VBox(imageView);
+//                    if (map.objectAt(newPosition) instanceof Animal){
+//                        vBox.setOnMouseClicked((action) -> createWindowWithAnimalInfo(map, (Animal) map.objectAt(newPosition)));
+//                    }
+//                    this.mapGridPane.add(vBox, newPosition.x, newPosition.y, 1, 1);
+//                }
+//            }
+//        }
+
+
 
         for (Vector2d position : animalsAndGrasses){
-            VBox vBox;
-            GuiElementBox guiElementBox = new GuiElementBox((IMapElement) map.objectAt(position));
-            ImageView imageView = guiElementBox.getImageView();
-            imageView.setFitWidth(this.gridWidth);
-            imageView.setFitHeight(this.gridHeight);
-            vBox = new VBox(imageView);
-            if (map.objectAt(position) instanceof Animal){
-                vBox.setOnMouseClicked((action) -> createWindowWithAnimalInfo(map, (Animal) map.objectAt(position)));
+            if (map.objectAt(position) != null) {
+                VBox vBox = new VBox();
+                GuiElementBox guiElementBox = new GuiElementBox((IMapElement) map.objectAt(position));
+                ImageView imageView = guiElementBox.getImageView();
+                imageView.setFitWidth(this.gridWidth);
+                imageView.setFitHeight(this.gridHeight);
+                vBox = new VBox(imageView);
+
+
+//                IMapElement objectToCheck;
+//                objectToCheck = (IMapElement) map.objectAt(position);
+//                if (objectToCheck instanceof Animal)
+//                    vBox.setStyle(((Animal) objectToCheck).getColorImage());
+//                if (map.objectAt(position) instanceof Grass)
+//                    vBox.setStyle("-fx-background-color: #00FF66");
+//
+
+                if (map.objectAt(position) instanceof Animal) {
+                    vBox.setOnMouseClicked((action) -> createWindowWithAnimalInfo(map, (Animal) map.objectAt(position)));
+                }
+                this.mapGridPane.add(vBox, position.x, position.y, 1, 1);
             }
-            this.mapGridPane.add(vBox, position.x, position.y, 1, 1);
         }
     }
 
-    private Vector2d[] getAnimalsAndGrasses(WorldMap map){
+    private ArrayList<Vector2d> getAnimalsAndGrasses(WorldMap map){
         LinkedList<Animal> animals = map.getAnimals();
         LinkedList<Grass> grasses = map.getGrasses();
-
-        Vector2d[] animalsAndGrasses = new Vector2d[map.getNumberOfAnimals() + map.getNumberOfGrasses()];
+        ArrayList<Vector2d> animalsAndGrasses = new ArrayList<>();
+//        Vector2d[] animalsAndGrasses = new Vector2d[animals.size() + map.getNumberOfGrasses()];
         int i = 0;
         for (Animal animal : animals){
-            animalsAndGrasses[i] = animal.getPosition();
-            i++;
+            animalsAndGrasses.add(animal.getPosition());
         }
         for (Grass grass : grasses){
-            animalsAndGrasses[i] = grass.getPosition();
-            i++;
+            animalsAndGrasses.add(grass.getPosition());
         }
 
         return animalsAndGrasses;
@@ -336,7 +389,7 @@ public class App extends Application{
         window.setTitle("Info of animal on the map.");
         createAnimalInfoVBox(map, animalInfoVBox, animal, window);
         StackPane stackPane = new StackPane(animalInfoVBox);
-        Scene newScene = new Scene(stackPane, 600,320);
+        Scene newScene = new Scene(stackPane, 600,600);
         window.setScene(newScene);
         if (this.mapWaitingThread)
             window.show();
@@ -435,6 +488,34 @@ public class App extends Application{
         return new VBox(this.mapLineChart);
     }
 
+    private VBox createTextPlot(WorldMap map){
+        VBox sumarizeVBox;
+
+        Text widthText1 = createText("Number of all animals: ");
+        Text answerText1 = createText(String.valueOf(map.getNumberOfAnimals()));
+        HBox widthBox1 = new HBox(widthText1, answerText1);
+
+        Text widthText2 = createText("Number of all grasses: ");
+        Text answerText2 = createText(String.valueOf(map.getNumberOfGrasses()));
+        HBox widthBox2 = new HBox(widthText2, answerText2);
+
+        Text widthText3 = createText("Number of empty fields: ");
+        Text answerText3 = createText(String.valueOf(map.getNumberOfUncoveredSquares()));
+        HBox widthBox3 = new HBox(widthText3, answerText3);
+
+        Text widthText4 = createText("Average energy if living animals: ");
+        Text answerText4 = createText(String.valueOf(map.getAverageEnergyOfAliveAnimals()));
+        HBox widthBox4 = new HBox(widthText4, answerText4);
+
+        Text widthText5 = createText("Average lifespan of dead animals: ");
+        Text answerText5 = createText(String.valueOf(map.getAverageLifetimeOfDeadAnimals()));
+        HBox widthBox5 = new HBox(widthText5, answerText5);
+
+        sumarizeVBox = new VBox(widthBox1, widthBox2, widthBox3, widthBox4, widthBox5);
+        sumarizeVBox.setSpacing(10);
+        return sumarizeVBox;
+    }
+
     private void updateLineChart(WorldMap map){
         this.mapDataSeries1.getData().add(new XYChart.Data<>(map.getDay(), map.getNumberOfAnimals()));
         this.mapDataSeries2.getData().add(new XYChart.Data<>(map.getDay(), map.getNumberOfGrasses()));
@@ -442,16 +523,18 @@ public class App extends Application{
 //        this.mapDataSeries4.getData().add(new XYChart.Data<>(map.getDay(), map.getMostPopularGenotype()));
         this.mapDataSeries5.getData().add(new XYChart.Data<>(map.getDay(), map.getAverageEnergyOfAliveAnimals()));
         this.mapDataSeries6.getData().add(new XYChart.Data<>(map.getDay(), map.getAverageLifetimeOfDeadAnimals()));
-//        try {
-//            this.mapLineChart.getData().add(this.mapDataSeries1);
-//            this.mapLineChart.getData().add(this.mapDataSeries2);
-//            this.mapLineChart.getData().add(this.mapDataSeries3);
-////            this.mapLineChart.getData().add(this.mapDataSeries4);
-//            this.mapLineChart.getData().add(this.mapDataSeries5);
-//            this.mapLineChart.getData().add(this.mapDataSeries6);
-//        } catch (IllegalArgumentException e){
-//            return;
-//        }
+        if (this.flag) {
+            try {
+                this.mapLineChart.getData().add(this.mapDataSeries1);
+                this.mapLineChart.getData().add(this.mapDataSeries2);
+                this.mapLineChart.getData().add(this.mapDataSeries3);
+//            this.mapLineChart.getData().add(this.mapDataSeries4);
+                this.mapLineChart.getData().add(this.mapDataSeries5);
+                this.mapLineChart.getData().add(this.mapDataSeries6);
+            } catch (IllegalArgumentException e) {
+                return;
+            }
+        }
 
     }
 
@@ -524,7 +607,14 @@ public class App extends Application{
         this.genotypeHBox.setAlignment(Pos.CENTER);
         this.plotAndGenotypeVBox.getChildren().add(this.genotypeHBox);
     }
-
+    private void updateTextPlot(){
+        this.sumarizeTextPlotVBox.getChildren().remove(this.sumarizePlotHBox);
+        VBox textFromPlot = createTextPlot(this.mapSimulation);
+        this.sumarizePlotHBox = new HBox(textFromPlot);
+        this.sumarizePlotHBox.setSpacing(20);
+        this.sumarizePlotHBox.setAlignment(Pos.CENTER);
+        this.sumarizeTextPlotVBox.getChildren().add(this.sumarizePlotHBox);
+    }
     private void saveFileToCSV(WorldMap map, String filePath, int day) throws FileNotFoundException {
         try (PrintWriter writer = new PrintWriter(filePath)){
             StringBuilder stringBuilder = new StringBuilder();
@@ -532,7 +622,7 @@ public class App extends Application{
             stringBuilder.append("Number of all animals | ");
             stringBuilder.append("Number of all grasses | ");
             stringBuilder.append("Number of empty fields | ");
-            stringBuilder.append("Average energy if living animals | ");
+            stringBuilder.append("Average energy of living animals | ");
             stringBuilder.append("Average lifespan of dead animals");
             stringBuilder.append("\n");
 
