@@ -3,11 +3,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Animal implements IMapElement{
-    private IWorldMap map;
+    private WorldMap map;
     private int energy;
     public MapDirection direction;
     public ArrayList<IPositionChangeObserver> observers = new ArrayList<>();
     private Genes genes;
+    private int startingEnergy;
     private final int lengthOfGenes;
     private Vector2d position;
     private int age;
@@ -15,10 +16,11 @@ public class Animal implements IMapElement{
     private int eatenGrass;
     Random rnd = new Random();
 
-    // losowy kierunek
-    //
-    public Animal(Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
+    public Animal(WorldMap map, Animal strongerParent, Animal weakerParent, int energy, int minMutation, int maxMutation, int mutationVariant) {
         this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
+        this.rnd = new Random();
+        this.map = map;
+        this.startingEnergy = energy;
         this.position = strongerParent.getPosition();
         this.age = 0;
         this.children = 0;
@@ -34,22 +36,25 @@ public class Animal implements IMapElement{
         else this.genes.slightCorrection(minMutation, maxMutation);
     }
 
-    public Animal(Vector2d position, int startEnergy, int genomeLength) {
+    public Animal(WorldMap map, Vector2d position, int startEnergy, int genomeLength) {
         this.direction = MapDirection.NORTH.rotate(rnd.nextInt(8));
+        this.rnd = new Random();
         this.lengthOfGenes = genomeLength;
+        this.startingEnergy = energy;
         this.genes = new Genes(genomeLength);
         this.position = position;
         this.age = 0;
         this.children = 0;
         this.energy = startEnergy;
         this.eatenGrass = 0;
-    }
-
-
-    public Animal(Vector2d position, int startEnergy, int genomeLength, IWorldMap map){
-        this(position, startEnergy, genomeLength);
         this.map = map;
     }
+
+
+//    public Animal(Vector2d position, int startEnergy, int genomeLength, WorldMap map){
+//        this(position, startEnergy, genomeLength);
+//        this.map = map;
+//    }
 
     public boolean isDead(){ // return true if this animal is dead
         return energy <= 0;
@@ -90,14 +95,14 @@ public class Animal implements IMapElement{
     public void move() {
         int gene = genes.nextGene();
         MapDirection geneDirection = direction.rotate(gene);
+        this.direction = geneDirection;
 
         Vector2d toMove = position.add(geneDirection.toUnitVector());
 
-        if (map.canMoveTo(toMove)){
-            Vector2d positionToDelete = new Vector2d(position.x, position.y);
-            this.position = this.position.add(geneDirection.toUnitVector());
-            this.positionChanged(this, positionToDelete, this.position);
-        }
+
+        Vector2d positionToDelete = new Vector2d(position.x, position.y);
+//        this.position = this.position.add(geneDirection.toUnitVector());
+        this.positionChanged(this, positionToDelete, toMove);
     }
 
     public void positionChanged(Animal animal, Vector2d oldPosition, Vector2d newPosition) {
@@ -122,5 +127,32 @@ public class Animal implements IMapElement{
     }
     public int proportion(int energy1, int energy2, int length){
         return (int) (energy1 / (energy1 + energy2)) * length;
+    }
+    @Override
+    public String getImagePath() {
+        if (this.energy >= 0.75 * this.startingEnergy)
+            return "src/main/resources/green_rabbit.png";
+        else if (this.energy >= 0.5 * this.startingEnergy)
+            return "src/main/resources/light_green_rabbit.png";
+        else if (this.energy >= 0.25 * this.startingEnergy)
+            return "src/main/resources/yellow_rabbit.png";
+        else
+            return "src/main/resources/red_rabbit.png";
+    }
+    public String getColorImage(){
+        if (this.energy >= 0.75 * this.startingEnergy)
+            return "-fx-background-color: #1C130F";
+        else if (this.energy >= 0.5 * this.startingEnergy)
+            return "-fx-background-color: #DE6F0D";
+        else if (this.energy >= 0.25 * this.startingEnergy)
+            return "-fx-background-color: #C7C706";
+        else
+            return "-fx-background-color: #BA1E47";
+    }
+    public int getActiveGene(){
+        return this.genes.getActiveGene();
+    }
+    public int getEatenGrass(){
+        return this.eatenGrass;
     }
 }
